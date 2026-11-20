@@ -28,3 +28,10 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Homepage sections live in `src/components/aervana/`, composed in `src/routes/index.tsx`; selected city is lifted state in the index route so every section reacts to it.
+- Air-quality rules (AQI bands, planner windows, emission factors) live in `src/lib/air.ts` with tests in `src/test/air.test.ts`; keep UI free of these formulas.
+- Sample readings come only from `src/lib/sample-data.ts` (deterministic, SSR-safe); swap this module for a live source rather than editing components.
+- Leaflet is browser-only: `LeafletMap.tsx` is lazy-loaded after mount; never import it statically. Map tiles use Esri Dark Gray Canvas (CARTO now requires a key).
+- Sections switch theme via `.surface-forest` / `.surface-ivory` classes that re-map shadcn tokens; dynamic `bg-aqi-*` classes are safelisted in styles.css.
