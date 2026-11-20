@@ -95,3 +95,69 @@ export function formatHour(h: number): string {
   const display = hour % 12 === 0 ? 12 : hour % 12;
   return `${display}${suffix}`;
 }
+
+/* ---------- Go / caution / avoid ---------- */
+
+export type Verdict = "go" | "caution" | "avoid";
+
+/** At or under the limit is fine; up to 50 above it calls for caution; beyond that, avoid. */
+export function verdict(aqi: number, limit: number): Verdict {
+  if (aqi <= limit) return "go";
+  if (aqi <= limit + 50) return "caution";
+  return "avoid";
+}
+
+export type Intensity = "light" | "moderate" | "vigorous";
+
+/** Highest AQI at which each effort level is comfortable for a healthy adult. */
+export const INTENSITY_LIMIT: Record<Intensity, number> = {
+  light: 150,
+  moderate: 100,
+  vigorous: 75,
+};
+
+/* ---------- EcoRoute ---------- */
+
+export type RouteKind = "main" | "mixed" | "green";
+
+/** Street-level pollution along each route type, relative to the city average. */
+export const ROUTE_EXPOSURE: Record<RouteKind, number> = {
+  main: 1.35,
+  mixed: 1,
+  green: 0.7,
+};
+
+export function routeAqi(cityAqi: number, kind: RouteKind): number {
+  return Math.round(cityAqi * ROUTE_EXPOSURE[kind]);
+}
+
+/* ---------- Personal impact tracker ---------- */
+
+export type ImpactAction = { id: string; label: string; note: string; kg: number };
+
+/** Estimated kg CO₂ saved each time an action is done. */
+export const IMPACT_ACTIONS: ImpactAction[] = [
+  { id: "cycle", label: "Cycled instead of driving", note: "8 km trip", kg: 8 * EMISSION_FACTORS.car },
+  { id: "metro", label: "Took the metro, not the car", note: "12 km trip", kg: 12 * (EMISSION_FACTORS.car - EMISSION_FACTORS.metro) },
+  { id: "walk", label: "Walked a short errand", note: "2 km", kg: 2 * EMISSION_FACTORS.car },
+  { id: "wfh", label: "Worked from home", note: "20 km commute avoided", kg: 20 * EMISSION_FACTORS.car },
+  { id: "carpool", label: "Shared a car ride", note: "15 km, two people", kg: (15 * EMISSION_FACTORS.car) / 2 },
+  { id: "plant", label: "Ate a plant-based meal", note: "instead of a meat dish", kg: 1.5 },
+  { id: "dry", label: "Line-dried the laundry", note: "instead of a tumble dryer", kg: 0.8 },
+];
+
+export const WEEKLY_GOAL_KG = 10;
+
+/** One list of completed action ids per day, Monday first. */
+export type WeekLog = string[][];
+
+export function dayKg(ids: string[]): number {
+  return ids.reduce((sum, id) => sum + (IMPACT_ACTIONS.find((a) => a.id === id)?.kg ?? 0), 0);
+}
+
+export function weekSummary(log: WeekLog) {
+  const perDay = log.map(dayKg);
+  const total = perDay.reduce((s, v) => s + v, 0);
+  const actions = log.reduce((s, d) => s + d.length, 0);
+  return { perDay, total, actions, goalPct: Math.min(total / WEEKLY_GOAL_KG, 1) };
+}

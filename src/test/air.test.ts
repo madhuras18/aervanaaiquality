@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aqiBand, bestWindow, weeklyCo2Kg, yearlyImpact } from "@/lib/air";
+import { aqiBand, bestWindow, dayKg, INTENSITY_LIMIT, routeAqi, verdict, weekSummary, weeklyCo2Kg, yearlyImpact } from "@/lib/air";
 
 describe("AQI bands (US EPA scale)", () => {
   it("50 is Good and 51 is Moderate", () => {
@@ -31,5 +31,40 @@ describe("transport and impact estimates", () => {
   });
   it("swapping 10 car km a week saves 88.4 kg CO2 a year for one person", () => {
     expect(yearlyImpact(10, 1).co2Kg).toBeCloseTo(88.4);
+  });
+});
+
+describe("go / caution / avoid", () => {
+  it("at the limit is go, just above is caution", () => {
+    expect(verdict(75, 75)).toBe("go");
+    expect(verdict(76, 75)).toBe("caution");
+  });
+  it("more than 50 over the limit is avoid", () => {
+    expect(verdict(125, 75)).toBe("caution");
+    expect(verdict(126, 75)).toBe("avoid");
+  });
+  it("vigorous exercise has the lowest limit", () => {
+    expect(INTENSITY_LIMIT.vigorous).toBeLessThan(INTENSITY_LIMIT.moderate);
+    expect(INTENSITY_LIMIT.moderate).toBeLessThan(INTENSITY_LIMIT.light);
+  });
+});
+
+describe("EcoRoute exposure", () => {
+  it("a green route sees 70% of the city AQI, a main road 135%", () => {
+    expect(routeAqi(100, "green")).toBe(70);
+    expect(routeAqi(100, "main")).toBe(135);
+  });
+});
+
+describe("personal impact tracker", () => {
+  it("cycling 8 km instead of driving saves 1.36 kg", () => {
+    expect(dayKg(["cycle"])).toBeCloseTo(1.36);
+  });
+  it("sums a week and caps goal progress at 100%", () => {
+    const log = [["wfh", "plant"], [], ["cycle"], ["wfh"], ["wfh"], ["wfh"], []];
+    const s = weekSummary(log);
+    expect(s.actions).toBe(6);
+    expect(s.total).toBeCloseTo(3.4 * 4 + 1.5 + 1.36);
+    expect(s.goalPct).toBe(1);
   });
 });
