@@ -23,7 +23,7 @@ const ACTIVITIES = [
 
 type ActivityId = (typeof ACTIVITIES)[number]["id"];
 
-export function Planner({ city }: { city: City }) {
+export function Planner({ city, sectionIndex = "04" }: { city: City; sectionIndex?: string }) {
   const [profile, setProfile] = useState<Profile>("adult");
   const [chosen, setChosen] = useState<ActivityId[]>(["run", "commute", "windows"]);
   const limit = PROFILE_LIMIT[profile];
@@ -47,7 +47,7 @@ export function Planner({ city }: { city: City }) {
       <div className="shell">
         <div className="reveal grid gap-8 md:grid-cols-12 md:items-end">
           <div className="md:col-span-7">
-            <SectionLabel index="04">Daily routine planner</SectionLabel>
+            <SectionLabel index={sectionIndex}>Daily routine planner</SectionLabel>
             <h2 className="display-lg mt-6">
               Plan around
               <br />

@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-city-forest.jpg";
 import { ArrowDownRight } from "lucide-react";
 import { aqiBand } from "@/lib/air";
@@ -34,16 +35,16 @@ export function Hero({ city }: { city: City }) {
             className="flex flex-wrap items-center gap-4 md:col-span-6 md:justify-end animate-rise"
             style={{ animationDelay: "700ms" }}
           >
-            <a
-              href="#air"
+            <Link
+              to="/air-quality"
               className="group inline-flex items-center gap-3 bg-primary px-6 py-4 font-display text-base text-primary-foreground transition-transform hover:-translate-y-0.5"
             >
               Check your air
               <ArrowDownRight className="h-5 w-5 transition-transform group-hover:rotate-[-45deg]" />
-            </a>
-            <a href="#learn" className="link-draw pb-1 font-display text-base text-foreground/85">
-              Why it matters
-            </a>
+            </Link>
+            <Link to="/assistant" className="link-draw pb-1 font-display text-base text-foreground/85">
+              Ask Aervana
+            </Link>
           </div>
         </div>
 
@@ -70,7 +71,7 @@ export function Hero({ city }: { city: City }) {
             </p>
           </div>
           <div className="hidden items-end justify-end md:flex">
-            <a href="#air" className="eyebrow flex items-center gap-3 text-foreground/70 hover:text-foreground">
+            <a href="#explore" className="eyebrow flex items-center gap-3 text-foreground/70 hover:text-foreground">
               Scroll <span className="block h-8 w-px bg-current animate-drift" aria-hidden />
             </a>
           </div>

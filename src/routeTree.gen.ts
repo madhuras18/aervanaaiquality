@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AirQualityRouteImport } from './routes/air-quality'
+import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as FamilyCareRouteImport } from './routes/family-care'
+import { Route as MyImpactRouteImport } from './routes/my-impact'
+import { Route as SmartLivingRouteImport } from './routes/smart-living'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AirQualityRoute = AirQualityRouteImport.update({
+  id: '/air-quality',
+  path: '/air-quality',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FamilyCareRoute = FamilyCareRouteImport.update({
+  id: '/family-care',
+  path: '/family-care',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyImpactRoute = MyImpactRouteImport.update({
+  id: '/my-impact',
+  path: '/my-impact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SmartLivingRoute = SmartLivingRouteImport.update({
+  id: '/smart-living',
+  path: '/smart-living',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/air-quality': typeof AirQualityRoute
+  '/assistant': typeof AssistantRoute
+  '/family-care': typeof FamilyCareRoute
+  '/my-impact': typeof MyImpactRoute
+  '/smart-living': typeof SmartLivingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/air-quality': typeof AirQualityRoute
+  '/assistant': typeof AssistantRoute
+  '/family-care': typeof FamilyCareRoute
+  '/my-impact': typeof MyImpactRoute
+  '/smart-living': typeof SmartLivingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/air-quality': typeof AirQualityRoute
+  '/assistant': typeof AssistantRoute
+  '/family-care': typeof FamilyCareRoute
+  '/my-impact': typeof MyImpactRoute
+  '/smart-living': typeof SmartLivingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/air-quality'
+    | '/assistant'
+    | '/family-care'
+    | '/my-impact'
+    | '/smart-living'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/air-quality'
+    | '/assistant'
+    | '/family-care'
+    | '/my-impact'
+    | '/smart-living'
+  id:
+    | '__root__'
+    | '/'
+    | '/air-quality'
+    | '/assistant'
+    | '/family-care'
+    | '/my-impact'
+    | '/smart-living'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AirQualityRoute: typeof AirQualityRoute
+  AssistantRoute: typeof AssistantRoute
+  FamilyCareRoute: typeof FamilyCareRoute
+  MyImpactRoute: typeof MyImpactRoute
+  SmartLivingRoute: typeof SmartLivingRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/air-quality': {
+      id: '/air-quality'
+      path: '/air-quality'
+      fullPath: '/air-quality'
+      preLoaderRoute: typeof AirQualityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/family-care': {
+      id: '/family-care'
+      path: '/family-care'
+      fullPath: '/family-care'
+      preLoaderRoute: typeof FamilyCareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-impact': {
+      id: '/my-impact'
+      path: '/my-impact'
+      fullPath: '/my-impact'
+      preLoaderRoute: typeof MyImpactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/smart-living': {
+      id: '/smart-living'
+      path: '/smart-living'
+      fullPath: '/smart-living'
+      preLoaderRoute: typeof SmartLivingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AirQualityRoute: AirQualityRoute,
+  AssistantRoute: AssistantRoute,
+  FamilyCareRoute: FamilyCareRoute,
+  MyImpactRoute: MyImpactRoute,
+  SmartLivingRoute: SmartLivingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

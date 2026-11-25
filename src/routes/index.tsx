@@ -1,18 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Nav } from "@/components/aervana/Nav";
 import { Hero } from "@/components/aervana/Hero";
-import { Intelligence } from "@/components/aervana/Intelligence";
-import { PollutionMap } from "@/components/aervana/PollutionMap";
-import { Learn } from "@/components/aervana/Learn";
-import { Planner } from "@/components/aervana/Planner";
-import { Indoor } from "@/components/aervana/Indoor";
-import { Transport } from "@/components/aervana/Transport";
-import { Impact } from "@/components/aervana/Impact";
-import { Assistant } from "@/components/aervana/Assistant";
-import { Footer } from "@/components/aervana/Footer";
-import { CITIES, DEFAULT_CITY_ID, findCity, type City } from "@/lib/sample-data";
-import { useRevealAll } from "@/hooks/use-reveal";
+import { HomePreviews } from "@/components/aervana/HomePreviews";
+import { useCity } from "@/lib/city-context";
 
 const TITLE = "AERVANA — AI urban air quality assistant";
 const DESCRIPTION =
@@ -26,33 +15,23 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "/" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
     ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
   component: Index,
 });
 
 function Index() {
-  const [city, setCity] = useState<City>(() => findCity(DEFAULT_CITY_ID));
-  useRevealAll();
+  const { city } = useCity();
 
   return (
-    <div className="min-h-screen">
-      <Nav />
-      <main>
-        <Hero city={city} />
-        <Intelligence city={city} onCity={setCity} cities={CITIES} />
-        <PollutionMap cities={CITIES} city={city} onCity={setCity} />
-        <Learn />
-        <Planner city={city} />
-        <Indoor city={city} />
-        <Transport />
-        <Impact />
-        <Assistant city={city} />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Hero city={city} />
+      <HomePreviews city={city} />
+    </>
   );
 }

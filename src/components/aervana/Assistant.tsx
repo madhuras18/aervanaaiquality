@@ -3,6 +3,7 @@ import { ArrowUp, Sparkles } from "lucide-react";
 import { aqiBand, bestWindow, formatHour } from "@/lib/air";
 import type { City } from "@/lib/sample-data";
 import { cn } from "@/lib/utils";
+import { CitySearch } from "./CityPicker";
 import { SampleBadge, SectionLabel } from "./SampleBadge";
 
 type Msg = { role: "user" | "assistant"; text: string };
@@ -44,13 +45,35 @@ function demoAnswer(q: string, city: City): string {
   return `Here's the short version for ${city.name}: the sample reading is AQI ${city.aqi}, which is ${band.label.toLowerCase()}. ${band.advice} Ask me about exercise timing, protecting children, purifiers or masks.`;
 }
 
-export function Assistant({ city }: { city: City }) {
+export function Assistant({
+  city,
+  onCity,
+  standalone = false,
+}: {
+  city: City;
+  onCity?: (c: City) => void;
+  standalone?: boolean;
+}) {
   const [messages, setMessages] = useState<Msg[]>([
     { role: "assistant", text: `Hello — I'm Aervana. Ask me anything about the air in ${city.name}, your home or your daily routine.` },
   ]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
+  const lastCity = useRef(city.id);
+
+  useEffect(() => {
+    if (lastCity.current !== city.id) {
+      lastCity.current = city.id;
+      setMessages((m) => [
+        ...m,
+        {
+          role: "assistant",
+          text: `Switched context to ${city.name} (sample AQI ${city.aqi}, ${aqiBand(city.aqi).label.toLowerCase()}). Ask anything about today's air or routine here.`,
+        },
+      ]);
+    }
+  }, [city]);
 
   useEffect(() => {
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
@@ -69,20 +92,34 @@ export function Assistant({ city }: { city: City }) {
   };
 
   return (
-    <section id="assistant" className="surface-forest surface-deep section-pad relative overflow-hidden">
+    <section id="assistant" className={cn("surface-forest surface-deep relative overflow-hidden", standalone ? "pb-20 pt-8 md:pb-28 md:pt-10" : "section-pad")}>
       <div className="pointer-events-none absolute -right-40 top-20 h-[36rem] w-[36rem] rounded-full bg-mint/10 blur-3xl animate-breathe" aria-hidden />
       <div className="shell relative grid gap-14 lg:grid-cols-12 lg:gap-16">
         <div className="reveal lg:col-span-5">
-          <SectionLabel index="08">AI assistant</SectionLabel>
-          <h2 className="display-lg mt-6">
-            Ask the air
-            <br />
-            <span className="text-mint">anything.</span>
-          </h2>
+          <SectionLabel index={standalone ? "AI" : "08"}>AI assistant</SectionLabel>
+          {standalone ? (
+            <h1 className="display-lg mt-6">
+              Ask the air
+              <br />
+              <span className="text-mint">anything.</span>
+            </h1>
+          ) : (
+            <h2 className="display-lg mt-6">
+              Ask the air
+              <br />
+              <span className="text-mint">anything.</span>
+            </h2>
+          )}
           <p className="lede mt-8 max-w-md text-muted-foreground">
             Plain-language answers about pollution, health and the small choices that help — tuned to the
             city you've selected.
           </p>
+          {onCity && (
+            <div className="mt-8 max-w-sm">
+              <p className="eyebrow mb-1 text-muted-foreground">City context</p>
+              <CitySearch onSelect={onCity} placeholder={`Currently ${city.name} — switch city…`} />
+            </div>
+          )}
           <div className="mt-10 space-y-2">
             {SUGGESTIONS.map((s) => (
               <button

@@ -54,7 +54,7 @@ function Stat({ value, unit, label, emphasis }: { value: number; unit: string; l
   );
 }
 
-export function Impact() {
+export function Impact({ sectionIndex = "07" }: { sectionIndex?: string }) {
   const [km, setKm] = useState(20);
   const [scale, setScale] = useState(1);
   const people = SCALES[scale]!.people;
@@ -65,7 +65,7 @@ export function Impact() {
       <div className="shell">
         <div className="reveal grid gap-8 md:grid-cols-12 md:items-end">
           <div className="md:col-span-8">
-            <SectionLabel index="07">Collective impact</SectionLabel>
+            <SectionLabel index={sectionIndex}>Collective impact</SectionLabel>
             <h2 className="display-lg mt-6">
               Small swaps.
               <br />

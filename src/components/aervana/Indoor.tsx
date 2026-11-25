@@ -14,7 +14,7 @@ const TIPS = [
   { id: "clean", room: "Living room", title: "Clean with a damp cloth", body: "Wet-dust surfaces and vacuum with a HEPA filter to stop settled particles becoming airborne again.", weight: 15 },
 ];
 
-export function Indoor({ city }: { city: City }) {
+export function Indoor({ city, sectionIndex = "05" }: { city: City; sectionIndex?: string }) {
   const [done, setDone] = useState<string[]>(["ventilate"]);
   const score = TIPS.filter((t) => done.includes(t.id)).reduce((s, t) => s + t.weight, 0);
   const outdoorHigh = city.aqi > 100;
@@ -25,7 +25,7 @@ export function Indoor({ city }: { city: City }) {
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-6">
             <div className="reveal">
-              <SectionLabel index="05">Indoor air for families</SectionLabel>
+              <SectionLabel index={sectionIndex}>Indoor air for families</SectionLabel>
               <h2 className="display-lg mt-6">
                 Clean air
                 <br />

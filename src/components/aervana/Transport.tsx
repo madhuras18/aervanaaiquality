@@ -13,7 +13,7 @@ const MODES: { id: Mode; label: string; exposure: string; note: string }[] = [
   { id: "car", label: "Car (petrol)", exposure: "High", note: "In-car air can be more polluted than the pavement in traffic." },
 ];
 
-export function Transport() {
+export function Transport({ sectionIndex = "06" }: { sectionIndex?: string }) {
   const [km, setKm] = useState(8);
   const [trips, setTrips] = useState(10);
   const [mode, setMode] = useState<Mode>("bicycle");
@@ -36,7 +36,7 @@ export function Transport() {
 
         <div className="lg:col-span-7">
           <div className="reveal">
-            <SectionLabel index="06">Sustainable transport</SectionLabel>
+            <SectionLabel index={sectionIndex}>Sustainable transport</SectionLabel>
             <h2 className="display-lg mt-6">
               Move lighter.
               <br />

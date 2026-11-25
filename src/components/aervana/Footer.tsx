@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Logo, NAV_ITEMS } from "./Nav";
 
 export function Footer() {
@@ -17,8 +18,15 @@ export function Footer() {
             <p className="eyebrow text-muted-foreground">Explore</p>
             <ul className="mt-4 grid grid-cols-2 gap-y-2 text-sm md:grid-cols-1">
               {NAV_ITEMS.map((i) => (
-                <li key={i.href}>
-                  <a href={i.href} className="link-draw text-foreground/80 hover:text-foreground">{i.label}</a>
+                <li key={i.to}>
+                  <Link
+                    to={i.to}
+                    activeOptions={{ exact: true }}
+                    activeProps={{ className: "text-primary font-medium" }}
+                    inactiveProps={{ className: "link-draw text-foreground/80 hover:text-foreground" }}
+                  >
+                    {i.label}
+                  </Link>
                 </li>
               ))}
             </ul>
